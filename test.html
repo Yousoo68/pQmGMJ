@@ -1,120 +1,120 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>테스트</title>
-  <style>
-    body{font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans KR','Apple SD Gothic Neo',sans-serif;margin:24px;background:#f7f7fb;color:#111}
-    .card{background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(20,20,50,0.06);padding:20px;max-width:680px;margin:0 auto}
-    .bold-title{font-weight:800;font-size:18px}
-    label{display:block;margin-top:18px;font-weight:600}
-    .counter{font-family:serif;font-style:italic;margin-bottom:6px}
-    .row{display:flex;gap:8px;align-items:center}
-    input[type=text]{flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:15px}
-    button{padding:10px 14px;border-radius:8px;border:0;background:#2b6df6;color:#fff;font-weight:600;cursor:pointer}
-    button:disabled{opacity:0.5;cursor:not-allowed}
-    .msg{margin-top:10px;font-size:14px}
-    .success{color:green}
-    .error{color:#c53030}
-    .small{font-size:13px;color:#555;margin-top:6px}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>썰</title>
+<style>
+  body, html {
+    margin:0;
+    padding:0;
+    height:100%;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:#fff;
+    overflow:hidden;
+    font-family: sans-serif;
+  }
+  #message {
+    font-size:4vw;
+    font-weight:bold;
+    color:#000;
+    text-align:center;
+    margin-bottom:20px;
+  }
+  #timer {
+    font-size: 15vw;
+    font-weight: bold;
+    color: #000;
+    display:none;
+  }
+  #popupImage {
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%) scale(0);
+    max-width: 90%;
+    max-height: 90%;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(0,0,0,0.7);
+    transition: transform 0.5s ease-out;
+    z-index: 999;
+  }
+  #popupImage.show {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  #inputContainer {
+    display:flex;
+    gap:10px;
+  }
+  #nameInput {
+    font-size: 1.5vw;
+    padding: 5px 10px;
+  }
+  #submitBtn {
+    font-size: 1.5vw;
+    padding: 5px 10px;
+    cursor:pointer;
+  }
+</style>
 </head>
 <body>
-  <div class="card">
-    <div class="bold-title">잘 숙지하였는지 테스트를 시작합니다</div>
+<b>잘 숙지하셨는지 테스트를 시작합니다.</b><br>
+<div id="message">이름을 입력하세요:</div>
+<div id="inputContainer">
+  <input id="nameInput" type="text" placeholder="이름 입력">
+  <button id="submitBtn">제출</button>
+</div>
+<div id="timer">5</div>
+<img id="popupImage" src="https://mblogthumb-phinf.pstatic.net/MjAyNTEwMjZfMTI0/MDAxNzYxNDY4NzA5MTM5.6IWoQVE_F8WeDqzdrxoO1I1QYkT_IlXAq3XJUv3e6hUg.Q_FKB6YHaaWSBRfCzxKl42YVcx_E_68kGkiac0d6N_Qg.JPEG/900%EF%BC%BFPicsart%EF%BC%BF25%EF%BC%8D10%EF%BC%8D26%EF%BC%BF17%EF%BC%8D51%EF%BC%8D08%EF%BC%8D579.jpg?type=w800" alt="Popup Image">
 
-    <!-- 섹션: 썰 내용을 말해도 되는 사람들 -->
-    <label for="canInput" style="margin-top:18px">썰 내용을 말해도 되는 사람들</label>
-    <div class="counter" id="canCounter">𝟎/𝟏𝟒</div>
-    <div class="row">
-      <input id="canInput" type="text" placeholder="이름을 한 명 입력하세요 (예: 신종환)" autocomplete="off">
-      <button id="canBtn">확인</button>
-    </div>
-    <div class="msg" id="canMsg"></div>
+<script>
+const allowedPeople = [
+  "신종환","이찬희","권민준","노우주","김용한","강현민","문유경","송인호",
+  "권혁","오현식","손현민","윤예찬","김기범","김건우",
+  "이수호","김명준","김형민","서준","한지승","김반디","김주호","한도연","방지원","문성빈","김채준"
+];
 
-    <!-- 섹션: 썰 내용을 말하면 안되는 사람들 -->
-    <label for="cannotInput" style="margin-top:18px">썰 내용을 말라면 안되는 사람들</label>
-    <div class="counter" id="cannotCounter">𝟎/𝟏𝟏</div>
-    <div class="row">
-      <input id="cannotInput" type="text" placeholder="이름을 한 명 입력하세요 (예: 이수호)" autocomplete="off">
-      <button id="cannotBtn">확인</button>
-    </div>
-    <div class="msg" id="cannotMsg"></div>
+const submitBtn = document.getElementById('submitBtn');
+const nameInput = document.getElementById('nameInput');
+const messageEl = document.getElementById('message');
+const inputContainer = document.getElementById('inputContainer');
+const timerEl = document.getElementById('timer');
+const popupImage = document.getElementById('popupImage');
 
-    <div class="small" style="margin-top:18px">주의: 이름은 정확히 지정된 한글 표기와 일치해야 정답으로 처리됩니다. 중복 입력은 불가합니다.</div>
-  </div>
-
-  <script>
-    (function(){
-      const canList = ['신종환','찬희','권민준','노우주','김용한','강현민','문유경','송인호','권혁','오현식','손현민','윤예찬','김기범','김건우'];
-      const cannotList = ['이수호','김명준','김형민','서준','한지승','김반디','김주호','한도연','방지원','문성빈','김채준'];
-
-      const canRemaining = new Set(canList);
-      const cannotRemaining = new Set(cannotList);
-
-      const canInput = document.getElementById('canInput');
-      const canBtn = document.getElementById('canBtn');
-      const canMsg = document.getElementById('canMsg');
-      const canCounter = document.getElementById('canCounter');
-
-      const cannotInput = document.getElementById('cannotInput');
-      const cannotBtn = document.getElementById('cannotBtn');
-      const cannotMsg = document.getElementById('cannotMsg');
-      const cannotCounter = document.getElementById('cannotCounter');
-
-      function updateCounters(){
-        canCounter.textContent = `${canList.length - canRemaining.size}/${canList.length}`;
-        cannotCounter.textContent = `${cannotList.length - cannotRemaining.size}/${cannotList.length}`;
-      }
-      updateCounters();
-
-      function checkRedirect(){
-        if(canRemaining.size === 0 && cannotRemaining.size === 0){
-          window.location.href = 'https://svgtopng.com';
+submitBtn.addEventListener('click', () => {
+  const name = nameInput.value.trim();
+  if(allowedPeople.includes(name)){
+    // 정답이면 통과 메시지 후 타이머
+    messageEl.textContent = "통과하셨습니다! 이제 썰을 보실 준비가 되셨습니까?";
+    inputContainer.style.display = "none";
+    
+    setTimeout(() => {
+      messageEl.style.display = 'none';
+      timerEl.style.display = 'block';
+      
+      let timeLeft = 5;
+      const interval = setInterval(() => {
+        timeLeft--;
+        if(timeLeft > 0){
+          timerEl.textContent = timeLeft;
+        } else {
+          clearInterval(interval);
+          timerEl.style.display = 'none';
+          popupImage.classList.add('show');
         }
-      }
+      }, 1000);
+    }, 500); // 바로 타이머 시작
+  } else {
+    // 틀리면 경고 메시지
+    messageEl.textContent = "죄송합니다. 오답입니다.";
+    nameInput.value = "";
+  }
+});
+</script>
 
-      function handleConfirm(inputEl, remainingSet, originalList, msgEl, counterEl){
-        const raw = inputEl.value.trim();
-        if(!raw){ msgEl.textContent = '이름을 입력해 주세요.'; msgEl.className='msg error'; return; }
-        if(!originalList.includes(raw)){
-          msgEl.textContent = '오답입니다 — 목록에 없는 이름이거나 표기가 다릅니다.';
-          msgEl.className='msg error';
-          return;
-        }
-        if(!remainingSet.has(raw)){
-          msgEl.textContent = '이미 정답 처리된 이름입니다 (중복 입력 불가).';
-          msgEl.className='msg error';
-          return;
-        }
-        remainingSet.delete(raw);
-        msgEl.textContent = `정답 처리되었습니다: ${raw}`; msgEl.className='msg success';
-        inputEl.value='';
-        const done = originalList.length - remainingSet.size;
-        counterEl.textContent = `${done}/${originalList.length}`;
-
-        if(remainingSet.size === 0){
-          msgEl.textContent = `모든 이름이 정답 처리되었습니다! (${originalList.length}/${originalList.length})`;
-          msgEl.className='msg success';
-          inputEl.disabled = true;
-        }
-
-        updateCounters();
-        checkRedirect();
-      }
-
-      canBtn.addEventListener('click', ()=>{
-        handleConfirm(canInput, canRemaining, canList, canMsg, canCounter);
-      });
-      cannotBtn.addEventListener('click', ()=>{
-        handleConfirm(cannotInput, cannotRemaining, cannotList, cannotMsg, cannotCounter);
-      });
-
-      canInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); canBtn.click(); } });
-      cannotInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); cannotBtn.click(); } });
-
-    })();
-  </script>
 </body>
 </html>
