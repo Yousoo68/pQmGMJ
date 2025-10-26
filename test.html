@@ -2,118 +2,79 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>썰</title>
+<title>테스트 페이지</title>
 <style>
-  body, html {
-    margin:0;
-    padding:0;
-    height:100%;
-    width:100%;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    background:#fff;
-    overflow:hidden;
-    font-family: sans-serif;
-  }
-  #message {
-    font-size:4vw;
-    font-weight:bold;
-    color:#000;
-    text-align:center;
-    margin-bottom:20px;
-  }
-  #timer {
-    font-size: 15vw;
-    font-weight: bold;
-    color: #000;
-    display:none;
-  }
-  #popupImage {
-    position: fixed;
-    top:50%;
-    left:50%;
-    transform: translate(-50%, -50%) scale(0);
-    max-width: 90%;
-    max-height: 90%;
-    border-radius:12px;
-    box-shadow:0 0 20px rgba(0,0,0,0.7);
-    transition: transform 0.5s ease-out;
-    z-index: 999;
-  }
-  #popupImage.show {
-    transform: translate(-50%, -50%) scale(1);
-  }
-  #inputContainer {
-    display:flex;
-    gap:10px;
-  }
-  #nameInput {
-    font-size: 1.5vw;
-    padding: 5px 10px;
-  }
-  #submitBtn {
-    font-size: 1.5vw;
-    padding: 5px 10px;
-    cursor:pointer;
-  }
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+    }
+    h1 {
+        font-weight: bold;
+    }
+    h2 {
+        font-weight: normal;
+        margin-top: 20px;
+    }
+    input {
+        padding: 5px;
+        font-size: 16px;
+    }
+    button {
+        padding: 5px 10px;
+        font-size: 16px;
+        margin-left: 10px;
+    }
+    #progress {
+        margin-bottom: 10px;
+        font-size: 18px;
+    }
 </style>
 </head>
 <body>
-<b>잘 숙지하셨는지 테스트를 시작합니다.</b><br>
-<div id="message">이름을 입력하세요:</div>
-<div id="inputContainer">
-  <input id="nameInput" type="text" placeholder="이름 입력">
-  <button id="submitBtn">제출</button>
-</div>
-<div id="timer">5</div>
-<img id="popupImage" src="https://mblogthumb-phinf.pstatic.net/MjAyNTEwMjZfMTI0/MDAxNzYxNDY4NzA5MTM5.6IWoQVE_F8WeDqzdrxoO1I1QYkT_IlXAq3XJUv3e6hUg.Q_FKB6YHaaWSBRfCzxKl42YVcx_E_68kGkiac0d6N_Qg.JPEG/900%EF%BC%BFPicsart%EF%BC%BF25%EF%BC%8D10%EF%BC%8D26%EF%BC%BF17%EF%BC%8D51%EF%BC%8D08%EF%BC%8D579.jpg?type=w800" alt="Popup Image">
+
+<h1>잘 숙지하였는지 테스트를 시작합니다</h1>
+<h2>썰 내용을 말해도 되는 사람들</h2>
+
+<div id="progress">0/14</div>
+<input type="text" id="nameInput" placeholder="이름을 입력하세요">
+<button onclick="checkName()">확인</button>
 
 <script>
-const allowedPeople = [
-  "신종환","이찬희","권민준","노우주","김용한","강현민","문유경","송인호",
-  "권혁","오현식","손현민","윤예찬","김기범","김건우",
-  "이수호","김명준","김형민","서준","한지승","김반디","김주호","한도연","방지원","문성빈","김채준"
+const correctNames = [
+    "신종환", "이찬희", "권민준", "노우주", "김용한", 
+    "강현민", "문유경", "송인호", "권혁", "오현식", 
+    "손현민", "윤예찬", "김기범", "김건우"
 ];
 
-const submitBtn = document.getElementById('submitBtn');
-const nameInput = document.getElementById('nameInput');
-const messageEl = document.getElementById('message');
-const inputContainer = document.getElementById('inputContainer');
-const timerEl = document.getElementById('timer');
-const popupImage = document.getElementById('popupImage');
+let answered = new Set();
 
-submitBtn.addEventListener('click', () => {
-  const name = nameInput.value.trim();
-  if(allowedPeople.includes(name)){
-    // 정답이면 통과 메시지 후 타이머
-    messageEl.textContent = "통과하셨습니다! 이제 썰을 보실 준비가 되셨습니까?";
-    inputContainer.style.display = "none";
+function checkName() {
+    const input = document.getElementById("nameInput");
+    const name = input.value.trim();
     
-    setTimeout(() => {
-      messageEl.style.display = 'none';
-      timerEl.style.display = 'block';
-      
-      let timeLeft = 5;
-      const interval = setInterval(() => {
-        timeLeft--;
-        if(timeLeft > 0){
-          timerEl.textContent = timeLeft;
+    if (correctNames.includes(name)) {
+        if (!answered.has(name)) {
+            answered.add(name);
+            alert("정답!");
         } else {
-          clearInterval(interval);
-          timerEl.style.display = 'none';
-          popupImage.classList.add('show');
+            alert("이미 입력한 이름입니다.");
         }
-      }, 1000);
-    }, 500); // 바로 타이머 시작
-  } else {
-    // 틀리면 경고 메시지
-    messageEl.textContent = "죄송합니다. 오답입니다.";
-    nameInput.value = "";
-  }
-});
+    } else {
+        alert("틀렸습니다.");
+    }
+
+    input.value = "";
+    document.getElementById("progress").innerText = `${answered.size}/${correctNames.length}`;
+    
+    // 모든 정답 입력 시 리디렉션
+    if (answered.size === correctNames.length) {
+        alert("모든 정답을 입력했습니다! 다음 페이지로 이동합니다.");
+        window.location.href = "https://yousoo68.github.io/pQmGMJ/ssul.html";
+    }
+}
 </script>
 
 </body>
