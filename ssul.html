@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>썰</title>
+<style>
+  body, html {
+    margin:0;
+    padding:0;
+    height:100%;
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#fff;
+    overflow:hidden;
+  }
+  #message {
+    font-size:4vw;
+    font-weight:bold;
+    color:#000;
+    text-align:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100%;
+    width:100%;
+  }
+  #timer {
+    font-size: 15vw;
+    font-weight: bold;
+    color: #000;
+  }
+  #popupImage {
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%) scale(0);
+    max-width: 90%;
+    max-height: 90%;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(0,0,0,0.7);
+    transition: transform 0.5s ease-out;
+    z-index: 999;
+  }
+  #popupImage.show {
+    transform: translate(-50%, -50%) scale(1);
+  }
+</style>
+</head>
+<body>
+<div id="message">통과하셨습니다! 이제 썰을 보실 준비가 되셨습니까?</div>
+<div id="timer" style="display:none;">5</div>
+<img id="popupImage" src="https://mblogthumb-phinf.pstatic.net/MjAyNTEwMjZfMTI0/MDAxNzYxNDY4NzA5MTM5.6IWoQVE_F8WeDqzdrxoO1I1QYkT_IlXAq3XJUv3e6hUg.Q_FKB6YHaaWSBRfCzxKl42YVcx_E_68kGkiac0d6N_Qg.JPEG/900%EF%BC%BFPicsart%EF%BC%BF25%EF%BC%8D10%EF%BC%8D26%EF%BC%BF17%EF%BC%8D51%EF%BC%8D08%EF%BC%8D579.jpg?type=w800" alt="Popup Image">
+
+<script>
+setTimeout(() => {
+    const messageEl = document.getElementById('message');
+    const timerEl = document.getElementById('timer');
+    messageEl.style.display = 'none';
+    timerEl.style.display = 'block';
+
+    let timeLeft = 5;
+    const popupImage = document.getElementById('popupImage');
+
+    const interval = setInterval(() => {
+        timeLeft--;
+        if(timeLeft > 0){
+            timerEl.textContent = timeLeft;
+        } else {
+            clearInterval(interval);
+            timerEl.style.display = 'none';
+            popupImage.classList.add('show');
+        }
+    }, 1000);
+}, 2000); // 2초 후 타이머 시작
+</script>
+</body>
+</html>
