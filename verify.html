@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>재학 인증 시스템</title>
+
+<style>
+body {
+    font-family: 'Pretendard', Arial, sans-serif;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: #ffffff;
+    padding: 28px;
+    width: 340px;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
+
+select, input, button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+select:focus, input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1e40af;
+}
+
+.panel {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.result {
+    display: none;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.check {
+    font-size: 42px;
+    color: #16a34a;
+    animation: pop 0.6s ease forwards;
+}
+
+.result-text {
+    margin-top: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #16a34a;
+    animation: slideUp 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop {
+    0% { transform: scale(0); opacity: 0; }
+    80% { transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- 재학여부 -->
+    <select id="status" onchange="changeStatus()">
+        <option value="">재학여부 선택</option>
+        <option value="student">재학생</option>
+        <option value="graduate">졸업생</option>
+    </select>
+
+    <!-- 재학생 -->
+    <div class="panel" id="studentPanel">
+        <input type="number" id="studentId" placeholder="학번 (10101 ~ 30830)">
+    </div>
+
+    <!-- 졸업생 -->
+    <div class="panel" id="graduatePanel">
+        <select id="graduateBatch">
+            <option value="">졸업 기수 선택</option>
+            <option>제1회 졸업생</option>
+            <option>제2회 졸업생</option>
+            <option>제3회 졸업생</option>
+            <option>제4회 졸업생</option>
+            <option>제5회 졸업생</option>
+            <option>제6회 졸업생</option>
+            <option>제7회 졸업생</option>
+            <option>제8회 졸업생</option>
+            <option>제9회 졸업생</option>
+            <option>제10회 졸업생</option>
+            <option>제11회 졸업생</option>
+            <option>제12회 졸업생</option>
+        </select>
+    </div>
+
+    <!-- 이름 -->
+    <input type="text" id="name" placeholder="이름 (2~3글자)">
+
+    <button onclick="verify()">확인</button>
+
+    <!-- 결과 -->
+    <div class="result" id="result">
+        <div class="check">✔</div>
+        <div class="result-text">인증완료</div>
+    </div>
+
+</div>
+
+<script>
+const restrictedNames = ["윤예찬", "손현민", "김건우", "한윤성", "신유수"];
+
+function changeStatus() {
+    const status = document.getElementById("status").value;
+    document.getElementById("studentPanel").style.display = "none";
+    document.getElementById("graduatePanel").style.display = "none";
+
+    if (status === "student") {
+        document.getElementById("studentPanel").style.display = "block";
+    }
+    if (status === "graduate") {
+        document.getElementById("graduatePanel").style.display = "block";
+    }
+}
+
+function verify() {
+    const status = document.getElementById("status").value;
+    const name = document.getElementById("name").value.trim();
+    const batch = document.getElementById("graduateBatch").value;
+
+    if (!status) {
+        alert("재학여부를 선택해주세요.");
+        return;
+    }
+
+    if (name.length < 2 || name.length > 3) {
+        alert("이름을 입력해주세요.");
+        return;
+    }
+
+    if (restrictedNames.includes(name)) {
+        if (status !== "graduate" || batch !== "제12회 졸업생") {
+            alert("잘못된 정보입니다.");
+            return;
+        }
+    }
+
+    if (status === "student") {
+        const id = Number(document.getElementById("studentId").value);
+        if (id < 10101 || id > 30830) {
+            alert("잘못된 정보입니다.");
+            return;
+        }
+    }
+
+    if (status === "graduate" && !batch) {
+        alert("졸업 기수를 선택해주세요.");
+        return;
+    }
+
+    document.getElementById("result").style.display = "block";
+}
+</script>
+
+</body>
+</html>
