@@ -67,7 +67,9 @@ const input = document.getElementById('codeInput');
 const container = document.getElementById('buttonContainer');
 const target = "yxu.so_0,sys479173001";
 
-// 👉 버튼 이름 + 복사될 내용 (여기 마음대로 수정 가능)
+let unlocked = false;
+
+// 버튼 데이터
 const buttonData = [
     { label: "인스타 아이디 본계", text: "yxu.so_0" },
     { label: "인스타 비번 본계", text: "$jMy-+fk4}9p3nBkQ^0i%I}W4vrOMrmHbwuGDHYCZHkwTPYgTs" },
@@ -82,10 +84,18 @@ const buttonData = [
 ];
 
 input.addEventListener('input', () => {
+    if (unlocked) return;
+
     if (input.value === target) {
-        input.style.display = 'none';
+        unlocked = true;
+
+        // 입력창 완전 제거
+        input.remove();
+
+        // 버튼 영역 표시
         container.style.display = 'block';
 
+        // 버튼 생성
         buttonData.forEach((item) => {
             const btn = document.createElement('button');
             btn.className = 'copy-btn';
